@@ -1,10 +1,23 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Kërkues";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <img style="padding-top: 7%" src=~/logo.png/>
+    <nav>
+    <div class="nav-wrapper" style="background-color:white;">
+      <form asp-action="Post" asp-controller="Home" method="post">
+        <div class="input-field w">
+          <input name="search" id="search" style="border-radius:25px;" type="search" required>
+          <label class="label-icon" for="search">
+              <i style="color:black;" class="material-icons">search</i>
+          </label>
+          <i class="material-icons">close</i>
+        </div>
+      </form>
+    </div>
+  </nav>
+    
 </div>
