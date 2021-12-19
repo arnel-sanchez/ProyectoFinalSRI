@@ -1,6 +1,7 @@
 ﻿using Kërkues_Backend.Models;
+using Microsoft.ML;
 
-namespace ProyectoFinalSRI.Services
+namespace Kërkues_Backend.Services
 {
     public interface ISearchEngine
     {
@@ -11,12 +12,14 @@ namespace ProyectoFinalSRI.Services
     {
         public SearchEngine()
         {
-
+            
         }
 
         public SearchResult Search(string search)
         {
-            throw new NotImplementedException();
+            var query = new Query(search);
+
+            return query.Ranking();
         }
     }
 }

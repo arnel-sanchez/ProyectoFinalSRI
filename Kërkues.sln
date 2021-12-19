@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kërkues-Backend", "Kërkues-Backend\Kërkues-Backend.csproj", "{36F8A968-C75F-4283-BCFB-0A12A64E1D73}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Kërkues-Frontend", "Kërkues-Frontend\Kërkues-Frontend.esproj", "{FF693628-A1C9-4760-8554-D1BB9779C045}"
+	ProjectSection(ProjectDependencies) = postProject
+		{36F8A968-C75F-4283-BCFB-0A12A64E1D73} = {36F8A968-C75F-4283-BCFB-0A12A64E1D73}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36F8A968-C75F-4283-BCFB-0A12A64E1D73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36F8A968-C75F-4283-BCFB-0A12A64E1D73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36F8A968-C75F-4283-BCFB-0A12A64E1D73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36F8A968-C75F-4283-BCFB-0A12A64E1D73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF693628-A1C9-4760-8554-D1BB9779C045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF693628-A1C9-4760-8554-D1BB9779C045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF693628-A1C9-4760-8554-D1BB9779C045}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FF693628-A1C9-4760-8554-D1BB9779C045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF693628-A1C9-4760-8554-D1BB9779C045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF693628-A1C9-4760-8554-D1BB9779C045}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EA82D1D-0336-402E-AC2D-E636A4A6ADBF}
+	EndGlobalSection
+EndGlobal

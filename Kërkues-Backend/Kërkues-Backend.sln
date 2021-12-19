@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kërkues-Backend", "Kërkues-Backend.csproj", "{2D4DE882-CD66-425C-8BCC-743E1A550EA2}"
 EndProject
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Kërkues-Frontend", "..\Kërkues-Frontend\Kërkues-Frontend.njsproj", "{BFC9F3A4-CE2E-40D9-8B16-18B0C03BD104}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{2D4DE882-CD66-425C-8BCC-743E1A550EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D4DE882-CD66-425C-8BCC-743E1A550EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D4DE882-CD66-425C-8BCC-743E1A550EA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BFC9F3A4-CE2E-40D9-8B16-18B0C03BD104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFC9F3A4-CE2E-40D9-8B16-18B0C03BD104}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFC9F3A4-CE2E-40D9-8B16-18B0C03BD104}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFC9F3A4-CE2E-40D9-8B16-18B0C03BD104}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

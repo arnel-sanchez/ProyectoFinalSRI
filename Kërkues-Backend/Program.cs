@@ -1,4 +1,4 @@
-using ProyectoFinalSRI.Services;
+using Kërkues_Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,5 +25,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Corpus.CorpusLoad(app.Configuration["FileLocationTest"], true);
 
 app.Run();

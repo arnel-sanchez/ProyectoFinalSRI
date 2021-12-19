@@ -1,7 +1,7 @@
 ﻿using Kërkues_Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProyectoFinalSRI.Services;
+using Kërkues_Backend.Services;
 
 namespace Kërkues_Backend.Controllers
 {
