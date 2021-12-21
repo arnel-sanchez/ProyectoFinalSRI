@@ -15,7 +15,7 @@ namespace Kërkues_Backend.Services
             {
                 StreamReader streamReader = new StreamReader(filesPath);
                 var text = streamReader.ReadToEnd();
-                ParseTest(text);
+                ParseTest(text, test);
 
                 foreach (var item1 in _files)
                 {
@@ -47,10 +47,41 @@ namespace Kërkues_Backend.Services
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(filesPath);
                 var files = directoryInfo.GetFiles();
+                int i = 1;
                 foreach (var file in files)
                 {
-                    
+                    StreamReader streamReader = new StreamReader(filesPath+"/"+file.Name);
+                    var text = streamReader.ReadToEnd();
+                    Parse(i,file.Name.Remove(file.Name.Length - file.Extension.Length), file.FullName, text, test);
+                    i++;
+                    streamReader.Close();
                 }
+
+                foreach (var item1 in _files)
+                {
+                    foreach (var item3 in item1.Vector)
+                    {
+                        foreach (var item2 in _files)
+                        {
+                            if (item2.Vector.ContainsKey(item3.Key))
+                            {
+                                item3.Value.Ni++;
+                            }
+                        }
+                    }
+                }
+                foreach (var item1 in _files)
+                {
+                    double norm = 0;
+                    foreach (var item2 in item1.Vector)
+                    {
+                        item2.Value.IDF = Math.Log10((double)_files.Count / (double)item2.Value.Ni);
+                        item2.Value.W = item2.Value.F * item2.Value.IDF;
+                        norm += Math.Pow(item2.Value.W, 2);
+                    }
+                    item1.Norm = Math.Sqrt(norm);
+                }
+
             }
         }
 
@@ -59,21 +90,14 @@ namespace Kërkues_Backend.Services
             return _files;
         }
 
-        private static void ParseTest(string text)
+        private static void ParseTest(string text, bool test)
         {
             int state = 0;
 
-            var aout = "";
-            var bout = "";
-            var tout = "";
-
-            var tokens = Tokenizer(text);
+            var tokens = Tokenizer(text, test);
 
             tokens = Stemming(tokens);
 
-            List<string> title = new List<string>();
-            List<string> author = new List<string>();
-            List<string> bookmarks = new List<string>();
             List<string> words = new List<string>();
             int id = 0;
 
@@ -95,7 +119,7 @@ namespace Kërkues_Backend.Services
                         state++;
                     }
                     else if (token != ".t")
-                        title.Add(token);
+                        words.Add(token);
                 }
                 else if(state == 2)
                 {
@@ -104,7 +128,7 @@ namespace Kërkues_Backend.Services
                         state++;
                     }
                     else if (token != ".a")
-                        author.Add(token);
+                        words.Add(token);
                 }
                 else if (state == 3)
                 {
@@ -113,18 +137,15 @@ namespace Kërkues_Backend.Services
                         state++;
                     }
                     else if (token != ".b")
-                        bookmarks.Add(token);
+                        words.Add(token);
                 }
                 else if (state == 4)
                 {
                     if (token == ".i")
                     {
                         state = 0;
-                        _files.Add(new Models.File(id, title, author, bookmarks, words, null, null, null));
+                        _files.Add(new Models.File(id, "", words, ""));
                         id = 0;
-                        title = new List<string>();
-                        author = new List<string>();
-                        bookmarks = new List<string>();
                         words = new List<string>();
                     }
                     else if (token != ".w")
@@ -133,7 +154,16 @@ namespace Kërkues_Backend.Services
             }
         }
 
-        private static TextTokens Tokenizer(string text)
+        private static void Parse(int id, string title, string location, string text, bool test)
+        {
+            var tokens = Tokenizer(title + " " + text, test);
+
+            tokens = Stemming(tokens);
+
+            _files.Add(new Models.File(id, title, tokens.Tokens.ToList(), location));
+        }
+
+        private static TextTokens Tokenizer(string text, bool test)
         {
             var context = new MLContext();
 
@@ -142,7 +172,7 @@ namespace Kërkues_Backend.Services
             var data = context.Data.LoadFromEnumerable(emptyData);
 
             var tokenization = context.Transforms.Text.TokenizeIntoWords("Tokens", "Text",
-                separators: new char[] { '\n', ' ', ',' })
+                separators: new char[] { '\n', ' ', ',', '\r' })
                 .Append(context.Transforms.Text.RemoveDefaultStopWords("Tokens", "Tokens",
                 Microsoft.ML.Transforms.Text.StopWordsRemovingEstimator.Language.English));
 
@@ -151,8 +181,11 @@ namespace Kërkues_Backend.Services
             var engine = context.Model.CreatePredictionEngine<TextData, TextTokens>(model);
 
             var tokens = engine.Predict(new TextData { Text = text });
-
-            tokens.Tokens = tokens.Tokens.Where(x=>x!=".").Append(".I").ToArray();
+            
+            if(test)
+                tokens.Tokens = tokens.Tokens.Where(x=>x!=".").Append(".I").ToArray();
+            else
+                tokens.Tokens = tokens.Tokens.Where(x => x != ".").ToArray();
 
             return tokens;
         }

@@ -144,7 +144,8 @@ namespace Kërkues_Backend.Models
                     break;
                 objectResult.Add(new SearchObjectResult
                 {
-                    Id = files[sim[i].Item1].Id,
+                    Name = files[sim[i].Item1].Title,
+                    Location = files[sim[i].Item1].Location
                 });
             }
 

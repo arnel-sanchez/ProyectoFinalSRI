@@ -4,17 +4,9 @@
     {
         public int Id { get; set; }
 
-        public List<string> Title { get; set; }
+        public string Title { get; set; }
 
-        public string TitleOut { get; set; }
-
-        public List<string> Author { get; set; }
-
-        public string AuthorOut { get; set; }
-
-        public List<string> Bookmarks { get; set; }
-
-        public string BookmarksOut { get; set; }
+        public string Location { get; set; }
 
         public List<string> Words { get; set; }
 
@@ -24,67 +16,22 @@
 
         public double Norm { get; set; }
 
-        public File(int id, List<string> title, List<string> author, List<string> bookmarks, List<string> words, string bout, string aout, string tout)
+        public File(int id, string title, List<string> words, string location)
         {
             Id = id;
             Title = title;
-            Author = author;
-            Bookmarks = bookmarks;
             Words = words;
+            Location = location;
             Vector = new Dictionary<string, DataTerm>();
-            UpdateTerms();
             UpdateVectors();
             Norm = 0;
-            AuthorOut = aout;
-            BookmarksOut = bout;
-            TitleOut = tout;
-        }
-
-        private void UpdateTerms()
-        {
-            
         }
 
         private void UpdateVectors()
         {
             int frec = 0;
-            foreach (var item in Title)
-            {
-                if (Vector.ContainsKey(item))
-                {
-                    Vector[item].Frec++;
-                }
-                else
-                {
-                    Vector.Add(item, new DataTerm { Frec = 1, F = 0, IDF = 0, W = 0, Ni = 0 }) ;
-                }
-            }
-
-            foreach (var item in Author)
-            {
-                if (Vector.ContainsKey(item))
-                {
-                    Vector[item].Frec++;
-                }
-                else
-                {
-                    Vector.Add(item, new DataTerm { Frec = 1, F = 0, IDF = 0, W = 0 });
-                }
-            }
 
             foreach (var item in Words)
-            {
-                if (Vector.ContainsKey(item))
-                {
-                    Vector[item].Frec++;
-                }
-                else
-                {
-                    Vector.Add(item, new DataTerm { Frec = 1, F = 0, IDF = 0, W = 0 });
-                }
-            }
-
-            foreach (var item in Bookmarks)
             {
                 if (Vector.ContainsKey(item))
                 {

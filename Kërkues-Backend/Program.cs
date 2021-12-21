@@ -26,6 +26,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Corpus.CorpusLoad(app.Configuration["FileLocationTest"], true);
+//Búsqueda en el conjunto de prueba
+//Corpus.CorpusLoad(app.Configuration["FileLocationTest"], true);
+
+//Búsqueda en archivos reales
+Corpus.CorpusLoad(app.Configuration["FileLocation"]);
 
 app.Run();
