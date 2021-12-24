@@ -21,7 +21,7 @@
             Id = id;
             Title = title;
             Words = words;
-            Location = Microsoft.AspNetCore.Http.Extensions.UriHelper.Encode(new Uri(location));
+            Location = location;
             Vector = new Dictionary<string, DataTerm>();
             UpdateVectors();
             Norm = 0;
