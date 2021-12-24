@@ -1,5 +1,6 @@
 ﻿using Kërkues_Backend.Models;
 using Microsoft.ML;
+using System.Diagnostics;
 
 namespace Kërkues_Backend.Services
 {
@@ -17,9 +18,14 @@ namespace Kërkues_Backend.Services
 
         public SearchResult Search(string search)
         {
+            var timer = new Stopwatch();
+            timer.Start();
             var query = new Query(search);
+            var res = query.Ranking();
+            timer.Stop();
 
-            return query.Ranking();
+            res.ResponseTime = (double)timer.ElapsedMilliseconds/(double)1000;
+            return res;
         }
     }
 }
