@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 
+import Axios from "axios";
+
 const useKërkuesSearch = (term) => {
-  const [data, setData] = useState(null);
+  const [data_, setData] = useState(null);
+
+  //const fetchDData = () => {Axios.post("https://localhost:7290/api/Search", {"search": term}).then(response => {console.log(response.data);})}
+  //fetchDData();
 
   useEffect(() => {
     const fetchData = async () => {
-      fetch(
-        
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          setData(result);
-        });
+      /*fetch("https://localhost:7290/api/Search", {"search": term})*/
+      Axios.post("https://localhost:7290/api/Search", {"search": term})
+        .then(response => response.data)
+		.then((result) => {setData(result);});
     };
 
     fetchData()
@@ -23,7 +25,8 @@ const useKërkuesSearch = (term) => {
       });
   }, [term]);
 
-  return { data };
+  console.log(data_);
+  return data_;
 };
 
 export default useKërkuesSearch;

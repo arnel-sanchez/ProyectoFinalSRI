@@ -7,12 +7,17 @@ import { Link } from "react-router-dom";
 import Search from "./Search";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
+import { Button } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
+
 function SearchPage() {
   const [{ term /* = "tesla" */ }, dispatch] = useStateValue();
-  const { data } = useKërkuesSearch(term); // Live API CALL
+  const data = useKërkuesSearch(term); // Live API CALL
+  
+  const history = useHistory();
 
   //Mock API CALL
-  // const data = Response;
+  //const data = Response;
 
   console.log(data);
 
@@ -30,36 +35,31 @@ function SearchPage() {
         <div className="searchPage-headerBody">
           <Search hideButtons />
         </div>
+				
+		<div className="search-buttons">
+          <Button type="submit" onClick={() => {history.push("")}} variant="outlined" style={{position: 'absolute', bottom:60, left:550,}}>
+            Go Home
+          </Button>
+        </div>
       </div>
 
       {term && (
         <div className="searchPage-results">
           <p className="searchPage-resultCount">
-            About {data?.searchInformation.formattedTotalResults} results (
-            {data?.searchInformation.formattedSearchTime} seconds) for {term}
+            About {data?.searchObjectResults.length} results (
+            {data?.responseTime} seconds) for {term}
           </p>
 
-          {data?.items.map((item) => (
+          {data?.searchObjectResults.map((item) => (
             <div className="searchPage-result">
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
-              <a href={item.link} target="_blank">
-                {item.pagemap?.cse_image?.length > 0 &&
-                  item.pagemap?.cse_image[0]?.src && (
-                    <img
-                      className="searchPage_resultImage"
-                      src={
-                        item.pagemap?.cse_image?.length > 0 &&
-                        item.pagemap?.cse_image[0]?.src
-                      }
-                      alt=""
-                    />
-                  )}
-                {item.displayLink} <ArrowDropDownIcon />
+              <a href={"file:///" + item.location} target="_blank">               
+                {item.location} 
               </a>
-              <a className="searchPage-resultTitle" href={item.link}>
-                <h2>{item.title}</h2>
+              <a className="searchPage-resultTitle" href={"file:///" + item.location}>
+                <h2>{item.name}</h2>
               </a>
-              <p className="searchPage-resultSnippet">{item.snippet}</p>
+              <p className="searchPage-resultSnippet">{item.name}</p>
             </div>
           ))}
         </div>
