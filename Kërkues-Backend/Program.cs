@@ -1,4 +1,4 @@
-using Kërkues_Backend.Services;
+using KÃ«rkues_Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,12 +24,19 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors(option =>
+{
+    option.AllowAnyOrigin();
+    option.AllowAnyHeader();
+    option.AllowAnyMethod();
+});
+
 app.MapControllers();
 
-//Búsqueda en el conjunto de prueba
+//BÃºsqueda en el conjunto de prueba
 //Corpus.CorpusLoad(app.Configuration["FileLocationTest"], true);
 
-//Búsqueda en archivos reales
+//BÃºsqueda en archivos reales
 Corpus.CorpusLoad(app.Configuration["FileLocation"]);
 
 app.Run();
