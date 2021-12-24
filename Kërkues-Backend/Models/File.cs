@@ -1,4 +1,7 @@
-﻿namespace Kërkues_Backend.Models
+﻿using System.Text;
+using System.Web;
+
+namespace Kërkues_Backend.Models
 {
     public class File
     {
@@ -21,7 +24,14 @@
             Id = id;
             Title = title;
             Words = words;
-            Location = location;
+            var list = location.Split('\\');
+            StringBuilder builder = new StringBuilder(list[0]);
+            for (int i = 1; i < list.Length; i++)
+            {
+                builder.Append('\\');
+                builder.Append(HttpUtility.UrlEncode(list[i]));
+            }
+            Location = builder.ToString();
             Vector = new Dictionary<string, DataTerm>();
             UpdateVectors();
             Norm = 0;
