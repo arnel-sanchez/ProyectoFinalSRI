@@ -27,8 +27,11 @@ namespace Kërkues_Backend.Models
             Tokens = new TextTokens();
             Norm = 0;
             Tokenize();
-            Stemming();
-            UpdateVector();
+            if(Tokens.Tokens!=null)
+            {
+                Stemming();
+                UpdateVector();
+            }
         }
 
         private void Tokenize()
@@ -111,6 +114,11 @@ namespace Kërkues_Backend.Models
 
         public SearchResult Ranking()
         {
+            if (Tokens.Tokens == null)
+                return new SearchResult
+                {
+                    SearchObjectResults = new List<SearchObjectResult>()
+                };
             var files = Corpus.GetFiles();
             Tuple<int,double>[] sim = new Tuple<int, double>[files.Count];
 
