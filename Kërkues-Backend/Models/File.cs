@@ -24,14 +24,7 @@ namespace Kërkues_Backend.Models
             Id = id;
             Title = title;
             Words = words;
-            var list = location.Split('\\');
-            StringBuilder builder = new StringBuilder(list[0]);
-            for (int i = 1; i < list.Length; i++)
-            {
-                builder.Append('\\');
-                builder.Append(HttpUtility.UrlEncode(list[i]));
-            }
-            Location = builder.ToString();
+            Location = Microsoft.AspNetCore.Http.Extensions.UriHelper.Encode(new Uri(location));
             Vector = new Dictionary<string, DataTerm>();
             UpdateVectors();
             Norm = 0;
