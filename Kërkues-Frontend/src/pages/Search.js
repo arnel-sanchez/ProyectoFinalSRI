@@ -7,8 +7,7 @@ import { useStateValue } from "../StateProvider";
 import { actionTypes } from "../reducer";
 
 function Search({ hideButtons = false }) {
-  const [{}, dispatch] = useStateValue();
-
+  const [{ term }, dispatch] = useStateValue();
   const [input, setInput] = useState("");
   const history = useHistory();
 
@@ -40,7 +39,11 @@ function Search({ hideButtons = false }) {
 
       {!hideButtons ? (
         <div className="search-buttons">
-          <Button type="submit" onClick={search} variant="outlined">
+          <Button 
+			type="submit" 
+			onClick={ search } 
+			variant="outlined"
+		  >
             Search Data
           </Button>
         </div>

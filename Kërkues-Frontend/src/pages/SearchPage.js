@@ -6,20 +6,19 @@ import Response from "../response";
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
 function SearchPage() {
-  const [{ term /* = "tesla" */ }, dispatch] = useStateValue();
-  const data = useKërkuesSearch(term); // Live API CALL
-  
+  const [{ term }, dispatch] = useStateValue();
   const history = useHistory();
-
-  //Mock API CALL
-  //const data = Response;
-
-  console.log(data);
+  
+  const data = useKërkuesSearch(term); // Live API CALL  
+  //const data = Response; //Mock API CALL
+  //console.log(data);
+  
+  const local = "http://127.0.0.1:8080/"
+  const file = (item) => {return local + encodeURI(item.split("\\").at(-1))}
 
   return (
     <div className="search-page">
@@ -37,7 +36,12 @@ function SearchPage() {
         </div>
 				
 		<div className="search-buttons">
-          <Button type="submit" onClick={() => {history.push("")}} variant="outlined" style={{position: 'absolute', bottom:60, left:550,}}>
+          <Button 
+			type="submit" 
+			onClick={() => {history.push("")}} 
+			variant="outlined" 
+			style={{position: 'absolute', bottom:60, left:550,}}
+		  >
             Go Home
           </Button>
         </div>
@@ -53,13 +57,12 @@ function SearchPage() {
           {data?.searchObjectResults.map((item) => (
             <div className="searchPage-result">
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
-              <a href={item.location} target="_blank">               
+              <a href={file(item.location)} target="blank" rel="noopener noreferrer">               
                 {item.location} 
               </a>
-              <a className="searchPage-resultTitle" href={item.location}>
+              <a className="searchPage-resultTitle" href={file(item.location)}>
                 <h2>{item.name}</h2>
               </a>
-              <p className="searchPage-resultSnippet">{item.name}</p>
             </div>
           ))}
         </div>

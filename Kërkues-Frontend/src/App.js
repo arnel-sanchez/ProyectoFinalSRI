@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="app">
       <Router>
-        <Switch>
+        <Switch>		  
           <Route path="/search:url" component={URL}>
             <SearchPage />
           </Route>
