@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useStateValue } from "../StateProvider";
 import useKërkuesSearch from "../useKërkuesSearch";
 import "./SearchPage.css";
@@ -9,14 +9,58 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-function SearchPage() {
+function SearchPage() {  
   const [{ term }, dispatch] = useStateValue();
-  const history = useHistory();
+  const [ locationKeys, setLocationKeys ] = useState([])
+  const history = useHistory(); 
   
-  const data = useKërkuesSearch(term); // Live API CALL  
-  //const data = Response; //Mock API CALL
-  //console.log(data);
+  const update = () => {
+	const newlocation = (history.location.pathname).replace("/search=", "")
+	if (newlocation === "/") {
+	  return;
+	}
+	const input = document.getElementById('textfield')
+	const lastValue = input.value;
+	input.value = newlocation
+	var event = new Event('input', { bubbles: true});
+	const tracker = input._valueTracker;
+	if (tracker) {
+	  tracker.setValue(lastValue);
+	}
+	input.dispatchEvent(event);		  
+	const button = document.getElementById('searchbutton')
+	button.click()
+  }
   
+  useEffect(() => {
+    if (performance.navigation.type === 1) {
+      // Reload	  
+    } else {
+	  // Not reload	
+    }
+	update();
+  }, [ document.getElementById('textfield') ]);
+  
+  useEffect(() => {
+    return history.listen(location => {
+      if (history.action === 'PUSH') {
+        setLocationKeys([ location.key ])
+      }
+      else if (history.action === 'POP') {		
+        if (locationKeys[1] === location.key) {
+          setLocationKeys(([ _, ...keys ]) => keys)  
+          // Forward event
+        } 
+		else {
+          setLocationKeys((keys) => [ location.key, ...keys ])  
+          // Back event  
+        }
+		update();
+      }
+    })
+  }, [ locationKeys ])
+  
+  const data = useKërkuesSearch(term);
   const local = "http://127.0.0.1:8080/"
   const file = (item) => {return local + encodeURI(item.split("\\").at(-1))}
 

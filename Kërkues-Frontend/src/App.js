@@ -8,8 +8,8 @@ function App() {
   return (
     <div className="app">
       <Router>
-        <Switch>		  
-          <Route path="/search:url" component={URL}>
+        <Switch>
+          <Route path="/search=:url" component={URL}>
             <SearchPage />
           </Route>
 		  <Route path="/">
