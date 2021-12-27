@@ -121,7 +121,8 @@ namespace Kërkues_Backend.Models
             if (Tokens.Tokens == null)
                 return new SearchResult
                 {
-                    SearchObjectResults = new List<SearchObjectResult>()
+                    SearchObjectResults = new List<SearchObjectResult>(),
+                    SearchSuggestion = new List<SearchSuggestion>()
                 };
             var files = Corpus.GetFiles();
             Tuple<int,double>[] sim = new Tuple<int, double>[files.Count];
