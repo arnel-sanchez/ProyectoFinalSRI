@@ -1,7 +1,4 @@
-﻿using System.Text;
-using System.Web;
-
-namespace Kërkues_Backend.Models
+﻿namespace Kërkues_Backend.Models
 {
     public class File
     {

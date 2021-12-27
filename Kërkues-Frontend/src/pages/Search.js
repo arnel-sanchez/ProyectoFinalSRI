@@ -7,51 +7,58 @@ import { useStateValue } from "../StateProvider";
 import { actionTypes } from "../reducer";
 
 function Search({ hideButtons = false }) {
-  const [{}, dispatch] = useStateValue();
-
+  const [{ }, dispatch] = useStateValue();
   const [input, setInput] = useState("");
   const history = useHistory();
 
   const search = (e) => {
-    e.preventDefault();
-
-    console.log("you hit search", input);
-
-    dispatch({
-      type: actionTypes.SET_SEARCH_TERM,
-      term: input,
-    });
-    /* do something input */
-
-    history.push("/search");
+	if (input === '') { 
+	  e.preventDefault();
+	} 
+	else  {
+      e.preventDefault();
+      console.log("You hit search:", input);
+      dispatch({
+        type: actionTypes.SET_SEARCH_TERM,
+        term: input,
+      });
+      if (e.isTrusted) {
+        history.push("/search=" + input);
+	  }
+	}
   };
 
   return (
     <form className="search">
       <div className="search-input">
         <SearchIcon className="search-inputIcon" />
-        <input value={input} onChange={(e) => setInput(e.target.value)} />
+        <input 
+		  id='textfield'
+		  value={input} 
+		  onChange={(e) => setInput(e.target.value)} 
+		/>
       </div>
 
       {!hideButtons ? (
         <div className="search-buttons">
-          <Button type="submit" onClick={search} variant="outlined">
-            Google Search
+          <Button 
+			type="submit" 
+			onClick={ search } 
+			variant="outlined"
+		  >
+            Search Data
           </Button>
-          <Button variant="outlined">I'm Feeling Lucky</Button>
         </div>
       ) : (
         <div className="search-buttons">
           <Button
+		    id='searchbutton' 
             className="search-buttonsHidden"
             type="submit"
-            onClick={search}
+            onClick={ search }
             variant="outlined"
           >
-            Google Search
-          </Button>
-          <Button className="search-buttonsHidden" variant="outlined">
-            I'm Feeling Lucky
+            Search Data
           </Button>
         </div>
       )}
