@@ -178,7 +178,8 @@ namespace Kërkues_Backend.Models
             var res = new List<SearchSuggestion>();
             foreach (var word in suggestions)
             {
-                res.Add(new SearchSuggestion { Suggestion = word });
+                if(word!=words)
+                    res.Add(new SearchSuggestion { Suggestion = word });
             }
             return res;
         }
