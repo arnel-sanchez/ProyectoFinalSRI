@@ -96,9 +96,12 @@ function SearchPage() {
             {data?.responseTime} seconds) for {term}
           </p>
 
-		  <div style={{ marginTop: 20, marginRight: 20, display: "inline-flex", flexDirection: "row" }}>
-		    <h3>{"Other Suggestions:"}</h3>
-		  </div>
+		  {data?.searchSuggestion.length > 0 &&
+		    <div style={{ marginTop: 20, marginRight: 20, display: "inline-flex", flexDirection: "row" }}>
+		      <h3>{"Other Suggestions:"}</h3>
+		    </div>
+		  }
+		  
 		  {data?.searchSuggestion.map((item) => (
 			<div style={{ marginRight: 20, display: "inline-flex", flexDirection: "row" }}>
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
