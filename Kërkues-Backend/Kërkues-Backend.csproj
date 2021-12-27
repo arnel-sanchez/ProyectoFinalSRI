@@ -10,6 +10,7 @@
     <PackageReference Include="Annytab.Stemmer" Version="1.2.4" />
     <PackageReference Include="Microsoft.ML" Version="1.7.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="WeCantSpell.Hunspell" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>

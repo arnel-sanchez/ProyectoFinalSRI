@@ -1,12 +1,15 @@
 ﻿using Kërkues_Backend.Services;
 using Microsoft.ML;
 using System.Text;
+using WeCantSpell.Hunspell;
 
 namespace Kërkues_Backend.Models
 {
     public class Query
     {
         public string Id { get; set; }
+
+        private string QueryString { get; set; }
 
         public string Words { get; set; }
 
@@ -22,6 +25,7 @@ namespace Kërkues_Backend.Models
         {
             Id = Guid.NewGuid().ToString();
             Words = words;
+            QueryString = words;
             MaximumFrequency = 0;
             Vector = new Dictionary<string, DataTermQuery>();
             Tokens = new TextTokens();
@@ -159,9 +163,22 @@ namespace Kërkues_Backend.Models
 
             var res = new SearchResult
             {
-                SearchObjectResults = objectResult
+                SearchObjectResults = objectResult,
+                SearchSuggestion = GetSuggestions(QueryString)
             };
 
+            return res;
+        }
+
+        private List<SearchSuggestion> GetSuggestions(string words)
+        {
+            var dictionary = WordList.CreateFromFiles(@"English (British).dic");
+            var suggestions = dictionary.Suggest(words);
+            var res = new List<SearchSuggestion>();
+            foreach (var word in suggestions)
+            {
+                res.Add(new SearchSuggestion { Suggestion = word });
+            }
             return res;
         }
     }
