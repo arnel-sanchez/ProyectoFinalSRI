@@ -96,6 +96,18 @@ function SearchPage() {
             {data?.responseTime} seconds) for {term}
           </p>
 
+		  <div style={{ marginTop: 20, marginRight: 20, display: "inline-flex", flexDirection: "row" }}>
+		    <h3>{"Other Suggestions:"}</h3>
+		  </div>
+		  {data?.searchSuggestion.map((item) => (
+			<div style={{ marginRight: 20, display: "inline-flex", flexDirection: "row" }}>
+              {/* eslint-disable-next-line react/jsx-no-target-blank */}
+              <a href={"/search=" + item.suggestion}>               
+                {item.suggestion} 
+              </a>
+            </div>
+          ))}
+
           {data?.searchObjectResults.map((item) => (
             <div className="searchPage-result">
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
