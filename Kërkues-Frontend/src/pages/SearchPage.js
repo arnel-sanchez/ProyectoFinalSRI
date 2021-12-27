@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useStateValue } from "../StateProvider";
 import useKërkuesSearch from "../useKërkuesSearch";
 import "./SearchPage.css";
-import Response from "../response";
 import { Link } from "react-router-dom";
 import Search from "./Search";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
@@ -16,7 +14,7 @@ function SearchPage() {
   
   const update = () => {
 	const newlocation = (history.location.pathname).replace("/search=", "")
-	if (newlocation === "/") {
+	if (newlocation.includes("/")) {
 	  return;
 	}
 	const input = document.getElementById('textfield')
