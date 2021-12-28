@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestFiles\**" />
+    <Content Remove="TestFiles\**" />
+    <EmbeddedResource Remove="TestFiles\**" />
+    <None Remove="TestFiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Program.cs~RF13ae3ff.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Annytab.Stemmer" Version="1.2.4" />
     <PackageReference Include="Microsoft.ML" Version="1.7.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -15,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Files\" />
-    <Folder Include="TestFiles\" />
   </ItemGroup>
 
 </Project>

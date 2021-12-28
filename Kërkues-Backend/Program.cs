@@ -33,8 +33,11 @@ app.UseCors(option =>
 
 app.MapControllers();
 
-//Búsqueda en el conjunto de prueba
-//Corpus.CorpusLoad(app.Configuration["FileLocationTest"], true);
+//Búsqueda en el conjunto de prueba Cranfield
+//Corpus.CorpusLoad(app.Configuration["FileLocationTestCranfield"], true);
+
+//Búsqueda en el conjunto de prueba 20NewsGroup
+//Corpus.CorpusLoad(app.Configuration["FileLocationTest20NewsGroup"]);
 
 //Búsqueda en archivos reales
 Corpus.CorpusLoad(app.Configuration["FileLocation"]);

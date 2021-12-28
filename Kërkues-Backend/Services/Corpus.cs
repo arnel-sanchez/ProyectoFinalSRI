@@ -5,6 +5,8 @@ namespace Kërkues_Backend.Services
 {
     public static class Corpus
     {
+        public static bool Test { get; set; }
+
         private static List<Models.File> _files { get; set; }
 
         public static void CorpusLoad(string filesPath, bool test = false)
