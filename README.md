@@ -9,9 +9,9 @@ $ dotnet run --project Kërkues-Backend.csproj
 ```
 
 ## Frontend
-### Ir al navegador e instalar la extensión Web Server for Chrome
-### En el botón Choose Folder seleccionar la carpeta en la cuál se levantará el servidor
-### Asígnarle el puerto 8080
+### - Ir al navegador e instalar la extensión Web Server for Chrome
+### - En el botón Choose Folder seleccionar la carpeta en la cuál se levantará el servidor
+### - Asígnarle el puerto 8080
 
 ```bash
 $ cd Kërkues-Frontend
