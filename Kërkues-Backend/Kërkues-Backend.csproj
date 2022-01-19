@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <None Remove="Program.cs~RF13ae3ff.TMP" />
+    <None Remove="Services\SearchEngine.cs~RF2528aa3.TMP" />
   </ItemGroup>
 
   <ItemGroup>

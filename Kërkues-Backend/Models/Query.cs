@@ -116,7 +116,7 @@ namespace Kërkues_Backend.Models
 
         }
 
-        public SearchResult Ranking()
+        public SearchResult Ranking(bool test = false)
         {
             if (Tokens.Tokens == null)
                 return new SearchResult
@@ -151,16 +151,32 @@ namespace Kërkues_Backend.Models
             Array.Sort(sim, (a, b) => b.Item2.CompareTo(a.Item2));
             var objectResult = new List<SearchObjectResult>();
 
-            for (int i = 0; i < sim.Length; i++)
+            if(!test)
             {
-                if (sim[i].Item2 == 0)
-                    break;
-                objectResult.Add(new SearchObjectResult
+                for (int i = 0; i < sim.Length; i++)
                 {
-                    Name = files[sim[i].Item1].Title,
-                    Location = files[sim[i].Item1].Location
-                });
+                    if (sim[i].Item2 == 0)
+                        break;
+                    objectResult.Add(new SearchObjectResult
+                    {
+                        Name = files[sim[i].Item1].Title,
+                        Location = files[sim[i].Item1].Location
+                    });
+                }
             }
+            else
+            {
+                for (int i = 0; i < sim.Length; i++)
+                {
+                    if (sim[i].Item2 == 0)
+                        break;
+                    objectResult.Add(new SearchObjectResult
+                    {
+                        Name = files[sim[i].Item1].Id.ToString()
+                    });
+                }
+            }
+            
 
             var res = new SearchResult
             {

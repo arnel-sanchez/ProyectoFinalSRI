@@ -7,6 +7,8 @@ namespace Kërkues_Backend.Services
     public interface ISearchEngine
     {
         public SearchResult Search(string search);
+
+        public SearchResult Search(string search, bool test);
     }
 
     public class SearchEngine : ISearchEngine
@@ -25,6 +27,18 @@ namespace Kërkues_Backend.Services
             timer.Stop();
 
             res.ResponseTime = (double)timer.ElapsedMilliseconds/(double)1000;
+            return res;
+        }
+
+        public SearchResult Search(string search, bool test)
+        {
+            var timer = new Stopwatch();
+            timer.Start();
+            var query = new Query(search);
+            var res = query.Ranking(test);
+            timer.Stop();
+
+            res.ResponseTime = (double)timer.ElapsedMilliseconds / (double)1000;
             return res;
         }
     }

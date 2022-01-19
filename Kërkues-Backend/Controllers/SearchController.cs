@@ -21,5 +21,11 @@ namespace Kërkues_Backend.Controllers
         {
             return Ok(_searchEngine.Search(request.Search));
         }
+
+        [HttpPost("test")]
+        public IActionResult Test(SearchRequest request)
+        {
+            return Ok(_searchEngine.Search(request.Search, true));
+        }
     }
 }
