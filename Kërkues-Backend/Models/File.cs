@@ -29,7 +29,7 @@
 
         private void UpdateVectors()
         {
-            int frec = 0;
+            var frec = 0;
 
             foreach (var item in Words)
             {
@@ -54,7 +54,7 @@
 
             foreach (var item in Vector)
             {
-                double temp = (double)item.Value.Frec / ((double)MaximunFrecuency);
+                var temp = (double)item.Value.Frec / MaximunFrecuency;
 
                 item.Value.F = temp;
             }

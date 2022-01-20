@@ -2,6 +2,6 @@
 {
     public class SearchRequest
     {
-        public string Search { get; set; }
+        public string Search { get; set; } = null!;
     }
 }

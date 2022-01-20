@@ -2,6 +2,6 @@
 {
     public class SearchSuggestion
     {
-        public string Suggestion { get; set; }
+        public string Suggestion { get; set; } = null!;
     }
 }
