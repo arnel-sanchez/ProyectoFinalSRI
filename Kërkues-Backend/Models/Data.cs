@@ -7,6 +7,6 @@
 
     public class TextTokens
     {
-        public string[] Tokens { get; set; } = null!;
+        public string[] Tokens { get; set; }
     }
 }

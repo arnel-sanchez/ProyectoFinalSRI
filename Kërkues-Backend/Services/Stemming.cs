@@ -71,117 +71,115 @@ namespace Kërkues_Backend.Services
 {
     public class Porter2
     {
+        private readonly string[] _doubles = { "bb", "dd", "ff", "gg", "mm", "nn", "pp", "rr", "tt" };
+        private readonly string[] _validLiEndings = { "c", "d", "e", "g", "h", "k", "m", "n", "r", "t" };
 
-        string[] doubles = { "bb", "dd", "ff", "gg", "mm", "nn", "pp", "rr", "tt" };
-        string[] validLiEndings = { "c", "d", "e", "g", "h", "k", "m", "n", "r", "t" };
+        private readonly string[,] _step1BReplacements =
+        {
+            { "eedly", "ee" },
+            { "ingly", "" },
+            { "edly", "" },
+            { "eed", "ee" },
+            { "ing", "" },
+            { "ed", "" }
+        };
 
-        private string[,] step1bReplacements =
-            {
-                {"eedly","ee"},
-                {"ingly",""},
-                {"edly",""},
-                {"eed","ee"},
-                {"ing",""},
-                {"ed",""}
-            };
+        private readonly string[,] _step2Replacements =
+        {
+            { "ization", "ize" },
+            { "iveness", "ive" },
+            { "fulness", "ful" },
+            { "ational", "ate" },
+            { "ousness", "ous" },
+            { "biliti", "ble" },
+            { "tional", "tion" },
+            { "lessli", "less" },
+            { "fulli", "ful" },
+            { "entli", "ent" },
+            { "ation", "ate" },
+            { "aliti", "al" },
+            { "iviti", "ive" },
+            { "ousli", "ous" },
+            { "alism", "al" },
+            { "abli", "able" },
+            { "anci", "ance" },
+            { "alli", "al" },
+            { "izer", "ize" },
+            { "enci", "ence" },
+            { "ator", "ate" },
+            { "bli", "ble" },
+            { "ogi", "og" },
+            { "li", "" }
+        };
 
-        string[,] step2Replacements =
-            {
-                {"ization","ize"},
-                {"iveness","ive"},
-                {"fulness","ful"},
-                {"ational","ate"},
-                {"ousness","ous"},
-                {"biliti","ble"},
-                {"tional","tion"},
-                {"lessli","less"},
-                {"fulli","ful"},
-                {"entli","ent"},
-                {"ation","ate"},
-                {"aliti","al"},
-                {"iviti","ive"},
-                {"ousli","ous"},
-                {"alism","al"},
-                {"abli","able"},
-                {"anci","ance"},
-                {"alli","al"},
-                {"izer","ize"},
-                {"enci","ence"},
-                {"ator","ate"},
-                {"bli","ble"},
-                {"ogi","og"},
-                {"li",""}
-            };
+        private readonly string[,] _step3Replacements =
+        {
+            { "ational", "ate" },
+            { "tional", "tion" },
+            { "alize", "al" },
+            { "icate", "ic" },
+            { "iciti", "ic" },
+            { "ative", "" },
+            { "ical", "ic" },
+            { "ness", "" },
+            { "ful", "" }
+        };
 
-        string[,] step3Replacements =
-            {
-                {"ational","ate"},
-                {"tional","tion"},
-                {"alize","al"},
-                {"icate","ic"},
-                {"iciti","ic"},
-                {"ative",""},
-                {"ical","ic"},
-                {"ness",""},
-                {"ful",""}
-            };
+        private readonly string[] _step4Replacements =
+        {
+            "ement",
+            "ment",
+            "able",
+            "ible",
+            "ance",
+            "ence",
+            "ate",
+            "iti",
+            "ion",
+            "ize",
+            "ive",
+            "ous",
+            "ant",
+            "ism",
+            "ent",
+            "al",
+            "er",
+            "ic"
+        };
 
-        string[] step4Replacements =
-                {"ement",
-                "ment",
-                "able",
-                "ible",
-                "ance",
-                "ence",
-                "ate",
-                "iti",
-                "ion",
-                "ize",
-                "ive",
-                "ous",
-                "ant",
-                "ism",
-                "ent",
-                "al",
-                "er",
-                "ic"
-            };
+        private readonly string[,] _exceptions =
+        {
+            { "skis", "ski" },
+            { "skies", "sky" },
+            { "dying", "die" },
+            { "lying", "lie" },
+            { "tying", "tie" },
+            { "idly", "idl" },
+            { "gently", "gentl" },
+            { "ugly", "ugli" },
+            { "early", "earli" },
+            { "only", "onli" },
+            { "singly", "singl" },
+            { "sky", "sky" },
+            { "news", "news" },
+            { "howe", "howe" },
+            { "atlas", "atlas" },
+            { "cosmos", "cosmos" },
+            { "bias", "bias" },
+            { "andes", "andes" }
+        };
 
-        string[,] exceptions =
-            {
-            {"skis","ski"},
-            {"skies","sky"},
-            {"dying","die"},
-            {"lying","lie"},
-            {"tying","tie"},
-            {"idly","idl"},
-            {"gently","gentl"},
-            {"ugly","ugli"},
-            {"early","earli"},
-            {"only","onli"},
-            {"singly","singl"},
-            {"sky","sky"},
-            {"news","news"},
-            {"howe","howe"},
-            {"atlas","atlas"},
-            {"cosmos","cosmos"},
-            {"bias","bias"},
-            {"andes","andes"}
-            };
-
-        string[] exceptions2 =
-            {"inning","outing","canning","herring","earring","proceed",
-                "exceed","succeed"};
+        private readonly string[] _exceptions2 =
+        {
+            "inning", "outing", "canning", "herring", "earring", "proceed",
+            "exceed", "succeed"
+        };
 
 
         // A helper table lookup code - used for vowel lookup
         private bool arrayContains(string[] arr, string s)
         {
-            for (int i = 0; i < arr.Length; ++i)
-            {
-                if (arr[i] == s) return true;
-            }
-            return false;
+            return arr.Any(t => t == s);
         }
 
         private bool isVowel(StringBuilder s, int offset)
@@ -195,7 +193,6 @@ namespace Kërkues_Backend.Services
                 case 'u':
                 case 'y':
                     return true;
-                    break;
                 default:
                     return false;
             }
@@ -203,33 +200,26 @@ namespace Kërkues_Backend.Services
 
         private bool isShortSyllable(StringBuilder s, int offset)
         {
-            if ((offset == 0) && (isVowel(s, 0)) && (!isVowel(s, 1)))
-                return true;
-            else
-                if (
-                    ((offset > 0) && (offset < s.Length - 1)) &&
-                    isVowel(s, offset) && !isVowel(s, offset + 1) &&
-                    (s[offset + 1] != 'w' && s[offset + 1] != 'x' && s[offset + 1] != 'Y')
-                    && !isVowel(s, offset - 1))
-                return true;
-            else
-                return false;
+            return offset == 0 && isVowel(s, 0) && !isVowel(s, 1) ||
+                   offset > 0 && offset < s.Length - 1 &&
+                   isVowel(s, offset) && !isVowel(s, offset + 1) &&
+                   s[offset + 1] != 'w' && s[offset + 1] != 'x' && s[offset + 1] != 'Y'
+                   && !isVowel(s, offset - 1);
         }
 
         private bool isShortWord(StringBuilder s, int r1)
         {
-            if ((r1 >= s.Length) && (isShortSyllable(s, s.Length - 2))) return true;
-
-            return false;
+            return r1 >= s.Length && isShortSyllable(s, s.Length - 2);
         }
 
         private void changeY(StringBuilder sb)
         {
             if (sb[0] == 'y') sb[0] = 'Y';
 
-            for (int i = 1; i < sb.Length; ++i)
+            for (var i = 1; i < sb.Length; ++i)
             {
-                if ((sb[i] == 'y') && (isVowel(sb, i - 1))) sb[i] = 'Y';
+                if (sb[i] == 'y' && isVowel(sb, i - 1)) 
+                    sb[i] = 'Y';
             }
         }
 
@@ -238,22 +228,22 @@ namespace Kërkues_Backend.Services
             r1 = sb.Length;
             r2 = sb.Length;
 
-            if ((sb.Length >= 5) && (sb.ToString(0, 5) == "gener" || sb.ToString(0, 5) == "arsen")) r1 = 5;
-            if ((sb.Length >= 6) && (sb.ToString(0, 6) == "commun")) r1 = 6;
+            if (sb.Length >= 5 && (sb.ToString(0, 5) == "gener" || sb.ToString(0, 5) == "arsen")) r1 = 5;
+            if (sb.Length >= 6 && (sb.ToString(0, 6) == "commun")) r1 = 6;
 
             if (r1 == sb.Length) // If R1 has not been changed by exception words
-                for (int i = 1; i < sb.Length; ++i) // Compute R1 according to the algorithm
+                for (var i = 1; i < sb.Length; ++i) // Compute R1 according to the algorithm
                 {
-                    if ((!isVowel(sb, i)) && (isVowel(sb, i - 1)))
+                    if (!isVowel(sb, i) && isVowel(sb, i - 1))
                     {
                         r1 = i + 1;
                         break;
                     }
                 }
 
-            for (int i = r1 + 1; i < sb.Length; ++i)
+            for (var i = r1 + 1; i < sb.Length; ++i)
             {
-                if ((!isVowel(sb, i)) && (isVowel(sb, i - 1)))
+                if (!isVowel(sb, i) && isVowel(sb, i - 1))
                 {
                     r2 = i + 1;
                     break;
@@ -264,65 +254,58 @@ namespace Kërkues_Backend.Services
         private void step0(StringBuilder sb)
         {
 
-            if ((sb.Length >= 3) && (sb.ToString(sb.Length - 3, 3) == "'s'"))
+            if (sb.Length >= 3 && sb.ToString(sb.Length - 3, 3) == "'s'")
                 sb.Remove(sb.Length - 3, 3);
-            else
-                if ((sb.Length >= 2) && (sb.ToString(sb.Length - 2, 2) == "'s"))
+            else if (sb.Length >= 2 && sb.ToString(sb.Length - 2, 2) == "'s")
                 sb.Remove(sb.Length - 2, 2);
-            else
-                    if (sb[sb.Length - 1] == '\'')
+            else if (sb[sb.Length - 1] == '\'')
                 sb.Remove(sb.Length - 1, 1);
         }
 
         private void step1a(StringBuilder sb)
         {
-
-            if ((sb.Length >= 4) && sb.ToString(sb.Length - 4, 4) == "sses")
+            if (sb.Length >= 4 && sb.ToString(sb.Length - 4, 4) == "sses")
                 sb.Replace("sses", "ss", sb.Length - 4, 4);
-            else
-                if ((sb.Length >= 3) && (sb.ToString(sb.Length - 3, 3) == "ied" || sb.ToString(sb.Length - 3, 3) == "ies"))
+            else if (sb.Length >= 3 && (sb.ToString(sb.Length - 3, 3) == "ied" || sb.ToString(sb.Length - 3, 3) == "ies"))
             {
-                if (sb.Length > 4)
-                    sb.Replace(sb.ToString(sb.Length - 3, 3), "i", sb.Length - 3, 3);
-                else
-                    sb.Replace(sb.ToString(sb.Length - 3, 3), "ie", sb.Length - 3, 3);
+                sb.Replace(sb.ToString(sb.Length - 3, 3), sb.Length > 4 ? "i" : "ie", sb.Length - 3, 3);
             }
             else
-                    if ((sb.Length >= 2) && (sb.ToString(sb.Length - 2, 2) == "us" || sb.ToString(sb.Length - 2, 2) == "ss"))
-                return;
-            else
-                        if ((sb.Length > 0) && (sb.ToString(sb.Length - 1, 1) == "s"))
             {
-                for (int i = 0; i < sb.Length - 2; ++i)
-                    if (isVowel(sb, i))
-                    {
-                        sb.Remove(sb.Length - 1, 1);
-                        break;
-                    }
+                if (sb.Length >= 2 && (sb.ToString(sb.Length - 2, 2) == "us" || sb.ToString(sb.Length - 2, 2) == "ss"))
+                    return;
+                if (sb.Length > 0 && sb.ToString(sb.Length - 1, 1) == "s")
+                {
+                    for (var i = 0; i < sb.Length - 2; ++i)
+                        if (isVowel(sb, i))
+                        {
+                            sb.Remove(sb.Length - 1, 1);
+                            break;
+                        }
+                }
             }
-
         }
 
         private void step1b(StringBuilder sb, int r1)
         {
-            for (int i = 0; i < 6; ++i)
+            for (var i = 0; i < 6; ++i)
             {
-                if ((sb.Length > step1bReplacements[i, 0].Length) && (sb.ToString(sb.Length - step1bReplacements[i, 0].Length, step1bReplacements[i, 0].Length) == step1bReplacements[i, 0]))
+                if (sb.Length > _step1BReplacements[i, 0].Length && sb.ToString(sb.Length - _step1BReplacements[i, 0].Length, _step1BReplacements[i, 0].Length) == _step1BReplacements[i, 0])
                 {
-                    switch (step1bReplacements[i, 0])
+                    switch (_step1BReplacements[i, 0])
                     {
                         case "eedly":
                         case "eed":
-                            if (sb.Length - step1bReplacements[i, 0].Length >= r1)
-                                sb.Replace(step1bReplacements[i, 0], step1bReplacements[i, 1], sb.Length - step1bReplacements[i, 0].Length, step1bReplacements[i, 0].Length);
+                            if (sb.Length - _step1BReplacements[i, 0].Length >= r1)
+                                sb.Replace(_step1BReplacements[i, 0], _step1BReplacements[i, 1], sb.Length - _step1BReplacements[i, 0].Length, _step1BReplacements[i, 0].Length);
                             break;
                         default:
-                            bool found = false;
-                            for (int j = 0; j < sb.Length - step1bReplacements[i, 0].Length; ++j)
+                            var found = false;
+                            for (var j = 0; j < sb.Length - _step1BReplacements[i, 0].Length; ++j)
                             {
                                 if (isVowel(sb, j))
                                 {
-                                    sb.Replace(step1bReplacements[i, 0], step1bReplacements[i, 1], sb.Length - step1bReplacements[i, 0].Length, step1bReplacements[i, 0].Length);
+                                    sb.Replace(_step1BReplacements[i, 0], _step1BReplacements[i, 1], sb.Length - _step1BReplacements[i, 0].Length, _step1BReplacements[i, 0].Length);
                                     found = true;
                                     break;
                                 }
@@ -338,7 +321,7 @@ namespace Kërkues_Backend.Services
                                         sb.Append("e");
                                         return;
                                 }
-                                if (arrayContains(doubles, sb.ToString(sb.Length - 2, 2)))
+                                if (arrayContains(_doubles, sb.ToString(sb.Length - 2, 2)))
                                 {
                                     sb.Remove(sb.Length - 1, 1);
                                     return;
@@ -355,43 +338,41 @@ namespace Kërkues_Backend.Services
 
         private void step1c(StringBuilder sb)
         {
-            if ((sb.Length > 0) &&
+            if (sb.Length > 0 &&
                 (sb[sb.Length - 1] == 'y' || sb[sb.Length - 1] == 'Y') &&
-                (sb.Length > 2) && (!isVowel(sb, sb.Length - 2))
+                sb.Length > 2 && (!isVowel(sb, sb.Length - 2))
                )
                 sb[sb.Length - 1] = 'i';
         }
 
         private void step2(StringBuilder sb, int r1)
         {
-            for (int i = 0; i < 24; ++i)
+            for (var i = 0; i < 24; ++i)
             {
                 if (
-                    (sb.Length >= step2Replacements[i, 0].Length) &&
-                    (sb.ToString(sb.Length - step2Replacements[i, 0].Length, step2Replacements[i, 0].Length) == step2Replacements[i, 0])
+                    sb.Length >= _step2Replacements[i, 0].Length &&
+                    sb.ToString(sb.Length - _step2Replacements[i, 0].Length, _step2Replacements[i, 0].Length) == _step2Replacements[i, 0]
                     )
                 {
-                    if (sb.Length - step2Replacements[i, 0].Length >= r1)
+                    if (sb.Length - _step2Replacements[i, 0].Length >= r1)
                     {
-                        switch (step2Replacements[i, 0])
+                        switch (_step2Replacements[i, 0])
                         {
                             case "ogi":
                                 if ((sb.Length > 3) &&
-                                    (sb[sb.Length - step2Replacements[i, 0].Length - 1] == 'l')
+                                    (sb[sb.Length - _step2Replacements[i, 0].Length - 1] == 'l')
                                     )
-                                    sb.Replace(step2Replacements[i, 0], step2Replacements[i, 1], sb.Length - step2Replacements[i, 0].Length, step2Replacements[i, 0].Length);
+                                    sb.Replace(_step2Replacements[i, 0], _step2Replacements[i, 1], sb.Length - _step2Replacements[i, 0].Length, _step2Replacements[i, 0].Length);
                                 return;
                             case "li":
                                 if ((sb.Length > 1) &&
-                                    (arrayContains(validLiEndings, sb.ToString(sb.Length - 3, 1)))
+                                    (arrayContains(_validLiEndings, sb.ToString(sb.Length - 3, 1)))
                                     )
                                     sb.Remove(sb.Length - 2, 2);
                                 return;
                             default:
-                                sb.Replace(step2Replacements[i, 0], step2Replacements[i, 1], sb.Length - step2Replacements[i, 0].Length, step2Replacements[i, 0].Length);
+                                sb.Replace(_step2Replacements[i, 0], _step2Replacements[i, 1], sb.Length - _step2Replacements[i, 0].Length, _step2Replacements[i, 0].Length);
                                 return;
-                                break;
-
                         }
                     }
                     else
@@ -402,23 +383,23 @@ namespace Kërkues_Backend.Services
 
         private void step3(StringBuilder sb, int r1, int r2)
         {
-            for (int i = 0; i < 9; ++i)
+            for (var i = 0; i < 9; ++i)
             {
                 if (
-                    (sb.Length >= step3Replacements[i, 0].Length) &&
-                    (sb.ToString(sb.Length - step3Replacements[i, 0].Length, step3Replacements[i, 0].Length) == step3Replacements[i, 0])
+                    sb.Length >= _step3Replacements[i, 0].Length &&
+                    sb.ToString(sb.Length - _step3Replacements[i, 0].Length, _step3Replacements[i, 0].Length) == _step3Replacements[i, 0]
                     )
                 {
-                    if (sb.Length - step3Replacements[i, 0].Length >= r1)
+                    if (sb.Length - _step3Replacements[i, 0].Length >= r1)
                     {
-                        switch (step3Replacements[i, 0])
+                        switch (_step3Replacements[i, 0])
                         {
                             case "ative":
-                                if (sb.Length - step3Replacements[i, 0].Length >= r2)
-                                    sb.Replace(step3Replacements[i, 0], step3Replacements[i, 1], sb.Length - step3Replacements[i, 0].Length, step3Replacements[i, 0].Length);
+                                if (sb.Length - _step3Replacements[i, 0].Length >= r2)
+                                    sb.Replace(_step3Replacements[i, 0], _step3Replacements[i, 1], sb.Length - _step3Replacements[i, 0].Length, _step3Replacements[i, 0].Length);
                                 return;
                             default:
-                                sb.Replace(step3Replacements[i, 0], step3Replacements[i, 1], sb.Length - step3Replacements[i, 0].Length, step3Replacements[i, 0].Length);
+                                sb.Replace(_step3Replacements[i, 0], _step3Replacements[i, 1], sb.Length - _step3Replacements[i, 0].Length, _step3Replacements[i, 0].Length);
                                 return;
                         }
                     }
@@ -429,34 +410,34 @@ namespace Kërkues_Backend.Services
 
         private void step4(StringBuilder sb, int r2)
         {
-            for (int i = 0; i < 18; ++i)
+            for (var i = 0; i < 18; ++i)
             {
                 if (
-                    (sb.Length >= step4Replacements[i].Length) &&
-                    (sb.ToString(sb.Length - step4Replacements[i].Length, step4Replacements[i].Length) == step4Replacements[i])                    // >=
+                    sb.Length >= _step4Replacements[i].Length &&
+                    sb.ToString(sb.Length - _step4Replacements[i].Length, _step4Replacements[i].Length) == _step4Replacements[i]                    // >=
                     )
                 {
-                    if (sb.Length - step4Replacements[i].Length >= r2)
+                    if (sb.Length - _step4Replacements[i].Length >= r2)
                     {
-                        switch (step4Replacements[i])
+                        switch (_step4Replacements[i])
                         {
                             case "ion":
                                 if (
-                                    (sb.Length > 3) &&
+                                    sb.Length > 3 &&
                                     (
-                                        (sb[sb.Length - step4Replacements[i].Length - 1] == 's') ||
-                                        (sb[sb.Length - step4Replacements[i].Length - 1] == 't')
+                                        sb[sb.Length - _step4Replacements[i].Length - 1] == 's' ||
+                                        sb[sb.Length - _step4Replacements[i].Length - 1] == 't'
                                     )
                                    )
-                                    sb.Remove(sb.Length - step4Replacements[i].Length, step4Replacements[i].Length);
+                                    sb.Remove(sb.Length - _step4Replacements[i].Length, _step4Replacements[i].Length);
                                 return;
                             default:
-                                sb.Remove(sb.Length - step4Replacements[i].Length, step4Replacements[i].Length);
+                                sb.Remove(sb.Length - _step4Replacements[i].Length, _step4Replacements[i].Length);
                                 return;
                         }
                     }
-                    else
-                        return;
+
+                    return;
                 }
             }
 
@@ -464,35 +445,24 @@ namespace Kërkues_Backend.Services
 
         private void step5(StringBuilder sb, int r1, int r2)
         {
-            if (sb.Length > 0)
-                if (
-                    (sb[sb.Length - 1] == 'e') &&
-                    (
-                        (sb.Length - 1 >= r2) ||
-                        ((sb.Length - 1 >= r1) && (!isShortSyllable(sb, sb.Length - 3)))
-                    )
-                   )
-                    sb.Remove(sb.Length - 1, 1);
-                else
-                    if (
-                        (sb[sb.Length - 1] == 'l') &&
-                            (sb.Length - 1 >= r2) &&
-                            (sb[sb.Length - 2] == 'l')
-                        )
-                    sb.Remove(sb.Length - 1, 1);
+            if (sb.Length > 0 &&
+                (sb[sb.Length - 1] == 'e' &&
+                 (sb.Length - 1 >= r2 || sb.Length - 1 >= r1 && !isShortSyllable(sb, sb.Length - 3)) ||
+                 sb[sb.Length - 1] == 'l' && sb.Length - 1 >= r2 && sb[sb.Length - 2] == 'l'))
+                sb.Remove(sb.Length - 1, 1);
         }
 
         public string stem(string word)
         {
             if (word.Length < 3) return word;
 
-            StringBuilder sb = new StringBuilder(word.ToLower());
+            var sb = new StringBuilder(word.ToLower());
 
             if (sb[0] == '\'') sb.Remove(0, 1);
 
-            for (int i = 0; i < exceptions.Length / 2; ++i)
-                if (word == exceptions[i, 0])
-                    return exceptions[i, 1];
+            for (var i = 0; i < _exceptions.Length / 2; ++i)
+                if (word == _exceptions[i, 0])
+                    return _exceptions[i, 1];
 
             int r1 = 0, r2 = 0;
             changeY(sb);
@@ -501,9 +471,9 @@ namespace Kërkues_Backend.Services
             step0(sb);
             step1a(sb);
 
-            for (int i = 0; i < exceptions2.Length; ++i)
-                if (sb.ToString() == exceptions2[i])
-                    return exceptions2[i];
+            foreach (var e in _exceptions2)
+                if (sb.ToString() == e)
+                    return e;
 
             step1b(sb, r1);
             step1c(sb);

@@ -31,7 +31,7 @@ namespace Kërkues_Backend.Models
             Tokens = new TextTokens();
             Norm = 0;
             Tokenize();
-            if(Tokens.Tokens!=null)
+            if (Tokens.Tokens != null)
             {
                 Stemming();
                 UpdateVector();
@@ -42,14 +42,11 @@ namespace Kërkues_Backend.Models
         {
             var context = new MLContext();
 
-            var emptyData = new List<TextData>();
-
-            var data = context.Data.LoadFromEnumerable(emptyData);
+            var data = context.Data.LoadFromEnumerable(new List<TextData>());
 
             var tokenization = context.Transforms.Text.TokenizeIntoWords("Tokens", "Text",
-                separators: new char[] { '\n', ' ', ',', '.', '-' })
-                .Append(context.Transforms.Text.RemoveDefaultStopWords("Tokens", "Tokens",
-                Microsoft.ML.Transforms.Text.StopWordsRemovingEstimator.Language.English));
+                new[] { '\n', ' ', ',', '.', '-' })
+                .Append(context.Transforms.Text.RemoveDefaultStopWords("Tokens", "Tokens"));
 
             var model = tokenization.Fit(data);
 
@@ -68,7 +65,7 @@ namespace Kërkues_Backend.Models
             }*/
 
             var stemmer = new Annytab.Stemmer.EnglishStemmer();
-            for (int i = 0; i < Tokens.Tokens.Length; i++)
+            for (var i = 0; i < Tokens.Tokens.Length; i++)
             {
                 Tokens.Tokens[i] = stemmer.GetSteamWord(Tokens.Tokens[i].ToLower());
             }
@@ -86,11 +83,11 @@ namespace Kërkues_Backend.Models
                     Vector[item].Frec++;
             }
 
-            foreach (var item in Vector)
+            foreach (var (_, value) in Vector)
             {
-                if(item.Value.Frec > MaximumFrequency)
+                if(value.Frec > MaximumFrequency)
                 {
-                    MaximumFrequency = item.Value.Frec;
+                    MaximumFrequency = value.Frec;
                 }
             }
 
@@ -114,8 +111,8 @@ namespace Kërkues_Backend.Models
                 }
                 else
                 {
-                    item1.Value.IDF = Math.Log10((double)files.Count / (double)ni);
-                    item1.Value.W = (item1.Value.A + ((1-item1.Value.A)*(double)item1.Value.Frec/(double)MaximumFrequency)) * item1.Value.IDF;
+                    item1.Value.IDF = Math.Log10((double)files.Count / ni);
+                    item1.Value.W = (item1.Value.A + (1-item1.Value.A) * item1.Value.Frec / MaximumFrequency) * item1.Value.IDF;
                     norm += Math.Pow(item1.Value.W, 2);
 
                     Norm += norm;
@@ -134,23 +131,22 @@ namespace Kërkues_Backend.Models
                     SearchSuggestion = new List<SearchSuggestion>()
                 };
             var files = Corpus.GetFiles();
-            Tuple<int,double>[] sim = new Tuple<int, double>[files.Count];
+            var sim = new Tuple<int, double>[files.Count];
 
-            for (int i = 0; i < sim.Length; i++)
+            for (var i = 0; i < sim.Length; i++)
             {
                 sim[i] = new Tuple<int, double>(0,0);
             }
 
-            int index = 0;
-            List<File> filesResult = new List<File>();
+            var index = 0;
 
             foreach (var item1 in files)
             {
-                foreach (var item2 in Vector)
+                foreach (var (key, value) in Vector)
                 {
-                    if(item1.Vector.ContainsKey(item2.Key))
+                    if(item1.Vector.ContainsKey(key))
                     {
-                        sim[index] = new Tuple<int, double>(index,sim[index].Item2+item2.Value.W * item1.Vector[item2.Key].W);
+                        sim[index] = new Tuple<int, double>(index,sim[index].Item2+value.W * item1.Vector[key].W);
                     }
                 }
                 sim[index] = new Tuple<int, double>(index,sim[index].Item2 / (item1.Norm * Norm));
@@ -162,30 +158,29 @@ namespace Kërkues_Backend.Models
 
             if(!test)
             {
-                for (int i = 0; i < sim.Length; i++)
+                foreach (var x in sim)
                 {
-                    if (sim[i].Item2 == 0)
+                    if (x.Item2 == 0)
                         break;
                     objectResult.Add(new SearchObjectResult
                     {
-                        Name = files[sim[i].Item1].Title,
-                        Location = files[sim[i].Item1].Location
+                        Name = files[x.Item1].Title,
+                        Location = files[x.Item1].Location
                     });
                 }
             }
             else
             {
-                for (int i = 0; i < sim.Length; i++)
+                foreach (var x in sim)
                 {
-                    if (sim[i].Item2 == 0)
+                    if (x.Item2 == 0)
                         break;
                     objectResult.Add(new SearchObjectResult
                     {
-                        Name = files[sim[i].Item1].Id.ToString()
+                        Name = files[x.Item1].Id.ToString()
                     });
                 }
             }
-            
 
             var res = new SearchResult
             {
@@ -203,7 +198,7 @@ namespace Kërkues_Backend.Models
             var res = new List<SearchSuggestion>();
             foreach (var word in suggestions)
             {
-                if(word!=words)
+                if (word != words)
                     res.Add(new SearchSuggestion { Suggestion = word });
             }
             return res;
