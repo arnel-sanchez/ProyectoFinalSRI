@@ -7,23 +7,23 @@ namespace Kërkues_Backend.Services
     {
         public static bool Test { get; set; }
 
-        private static List<Models.File> _files { get; set; }
+        private static List<Models.File> Files { get; set; } = null!;
 
         public static void CorpusLoad(string filesPath, bool test = false)
         {
-            _files = new List<Models.File>();
+            Files = new List<Models.File>();
 
             if (test)
             {
-                StreamReader streamReader = new StreamReader(filesPath);
+                var streamReader = new StreamReader(filesPath);
                 var text = streamReader.ReadToEnd();
                 ParseTest(text, test);
 
-                foreach (var item1 in _files)
+                foreach (var item1 in Files)
                 {
                     foreach (var item3 in item1.Vector)
                     {
-                        foreach (var item2 in _files)
+                        foreach (var item2 in Files)
                         {
                             if (item2.Vector.ContainsKey(item3.Key))
                             {
@@ -32,12 +32,12 @@ namespace Kërkues_Backend.Services
                         }
                     }
                 }
-                foreach (var item1 in _files)
+                foreach (var item1 in Files)
                 {
                     double norm = 0;
                     foreach (var item2 in item1.Vector)
                     {
-                        item2.Value.IDF = Math.Log10((double)_files.Count / (double)item2.Value.Ni);
+                        item2.Value.IDF = Math.Log10((double)Files.Count / item2.Value.Ni);
                         item2.Value.W = item2.Value.F * item2.Value.IDF;
                         norm += Math.Pow(item2.Value.W, 2);
                     }
@@ -47,23 +47,23 @@ namespace Kërkues_Backend.Services
             }
             else
             {
-                DirectoryInfo directoryInfo = new DirectoryInfo(filesPath);
+                var directoryInfo = new DirectoryInfo(filesPath);
                 var files = directoryInfo.GetFiles();
-                int i = 1;
+                var i = 1;
                 foreach (var file in files)
                 {
-                    StreamReader streamReader = new StreamReader(filesPath+"/"+file.Name);
+                    var streamReader = new StreamReader(filesPath+"/"+file.Name);
                     var text = streamReader.ReadToEnd();
                     Parse(i,file.Name.Remove(file.Name.Length - file.Extension.Length), file.FullName, text, test);
                     i++;
                     streamReader.Close();
                 }
 
-                foreach (var item1 in _files)
+                foreach (var item1 in Files)
                 {
                     foreach (var item3 in item1.Vector)
                     {
-                        foreach (var item2 in _files)
+                        foreach (var item2 in Files)
                         {
                             if (item2.Vector.ContainsKey(item3.Key))
                             {
@@ -72,12 +72,12 @@ namespace Kërkues_Backend.Services
                         }
                     }
                 }
-                foreach (var item1 in _files)
+                foreach (var item1 in Files)
                 {
                     double norm = 0;
                     foreach (var item2 in item1.Vector)
                     {
-                        item2.Value.IDF = Math.Log10((double)_files.Count / (double)item2.Value.Ni);
+                        item2.Value.IDF = Math.Log10((double)Files.Count / item2.Value.Ni);
                         item2.Value.W = item2.Value.F * item2.Value.IDF;
                         norm += Math.Pow(item2.Value.W, 2);
                     }
@@ -89,77 +89,93 @@ namespace Kërkues_Backend.Services
 
         public static List<Models.File> GetFiles()
         {
-            return _files;
+            return Files;
         }
 
         private static void ParseTest(string text, bool test)
         {
-            int state = 0;
+            var state = 0;
 
             var tokens = Tokenizer(text, test);
 
             tokens = Stemming(tokens);
 
-            List<string> words = new List<string>();
-            int id = 0;
+            var words = new List<string>();
+            var id = 0;
 
             foreach (var token in tokens.Tokens)
             {
-                if(state==0)
+                switch (state)
                 {
-                    if (token == ".t")
-                    {
+                    case 0 when token == ".t":
                         state++;
-                    }
-				    else if (token == ".w")
-				    {
-				    	state = 4;
-				    }
-                    else if(token != ".i")
-                        id = int.Parse(token);
-                }
-                else if (state == 1)
-                {
-                    if (token == ".a")
+                        break;
+                    case 0 when token == ".w":
+                        state = 4;
+                        break;
+                    case 0:
                     {
+                        if (token != ".i")
+                        {
+                            id = int.Parse(token);
+                        }
+
+                        break;
+                    }
+                    case 1 when token == ".a":
                         state++;
-                    }
-                    else if (token != ".t")
-                        words.Add(token);
-                }
-                else if(state == 2)
-                {
-                    if (token == ".b")
+                        break;
+                    case 1:
                     {
+                        if (token != ".t")
+                        {
+                            words.Add(token);
+                        }
+
+                        break;
+                    }
+                    case 2 when token == ".b":
                         state++;
-                    }
-				    else if (token == ".w")
-				    {
-				    	state = 4;
-				    }
-                    else if (token != ".a")
-                        words.Add(token);
-                }
-                else if (state == 3)
-                {
-                    if (token == ".w")
+                        break;
+                    case 2 when token == ".w":
+                        state = 4;
+                        break;
+                    case 2:
                     {
+                        if (token != ".a")
+                        {
+                            words.Add(token);
+                        }
+
+                        break;
+                    }
+                    case 3 when token == ".w":
                         state++;
-                    }
-                    else if (token != ".b")
-                        words.Add(token);
-                }
-                else if (state == 4)
-                {
-                    if (token == ".i")
+                        break;
+                    case 3:
                     {
+                        if (token != ".b")
+                        {
+                            words.Add(token);
+                        }
+
+                        break;
+                    }
+                    case 4 when token == ".i":
                         state = 0;
-                        _files.Add(new Models.File(id, "", words, ""));
+                        Files.Add(new Models.File(id, "", words, ""));
                         id = 0;
                         words = new List<string>();
+                        break;
+                    case 4:
+                    {
+                        if (token != ".w")
+                        {
+                            words.Add(token);
+                        }
+
+                        break;
                     }
-                    else if (token != ".w")
-                        words.Add(token);
                 }
             }
         }
@@ -170,32 +186,29 @@ namespace Kërkues_Backend.Services
 
             tokens = Stemming(tokens);
 
-            _files.Add(new Models.File(id, title, tokens.Tokens.ToList(), location));
+            Files.Add(new Models.File(id, title, tokens.Tokens.ToList(), location));
         }
 
         private static TextTokens Tokenizer(string text, bool test)
         {
             var context = new MLContext();
 
-            var emptyData = new List<TextData>();
-
-            var data = context.Data.LoadFromEnumerable(emptyData);
+            var data = context.Data.LoadFromEnumerable(new List<TextData>());
 
             var tokenization = context.Transforms.Text.TokenizeIntoWords("Tokens", "Text",
-                separators: new char[] { '\n', ' ', ',', '\r', ';', '?', '(', ')' })
-                .Append(context.Transforms.Text.RemoveDefaultStopWords("Tokens", "Tokens",
-                Microsoft.ML.Transforms.Text.StopWordsRemovingEstimator.Language.English));
+                new[] { '\n', ' ', ',', '\r', ';', '?', '(', ')' })
+                .Append(context.Transforms.Text.RemoveDefaultStopWords("Tokens", "Tokens"));
 
             var model = tokenization.Fit(data);
 
             var engine = context.Model.CreatePredictionEngine<TextData, TextTokens>(model);
 
             var tokens = engine.Predict(new TextData { Text = text });
-            
-            if(test)
-                tokens.Tokens = tokens.Tokens.Where(x=>x!=".").Append(".I").ToArray();
-            else
-                tokens.Tokens = tokens.Tokens.Where(x => x != ".").ToArray();
+
+            tokens.Tokens =
+                test
+                    ? tokens.Tokens.Where(x => x != ".").Append(".I").ToArray()
+                    : tokens.Tokens.Where(x => x != ".").ToArray();
 
             return tokens;
         }
@@ -204,7 +217,7 @@ namespace Kërkues_Backend.Services
         {
             
             var stemmer = new Porter2();
-            for (int i = 0; i < text.Tokens.Length; i++)
+            for (var i = 0; i < text.Tokens.Length; i++)
             {
                 text.Tokens[i] = stemmer.stem(text.Tokens[i].ToLower());
             }
