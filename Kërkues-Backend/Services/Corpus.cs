@@ -202,18 +202,20 @@ namespace Kërkues_Backend.Services
 
         private static TextTokens Stemming(TextTokens text)
         {
-            /*
-            Porter2 stemmer = new Porter2();
+            
+            var stemmer = new Porter2();
             for (int i = 0; i < text.Tokens.Length; i++)
             {
                 text.Tokens[i] = stemmer.stem(text.Tokens[i].ToLower());
-            }*/
+            }
 
+            /*
             var stemmer = new Annytab.Stemmer.EnglishStemmer();
             for (int i = 0; i < text.Tokens.Length; i++)
             {
                 text.Tokens[i] = stemmer.GetSteamWord(text.Tokens[i].ToLower());
             }
+            */
 
             return text;
         }

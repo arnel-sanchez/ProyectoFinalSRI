@@ -34,10 +34,10 @@ app.UseCors(option =>
 app.MapControllers();
 
 //Búsqueda en el conjunto de prueba Cranfield
-//Corpus.CorpusLoad(app.Configuration["FileLocationTestCranfield"], true);
+Corpus.CorpusLoad(app.Configuration["FileLocationTestCranfield"], true);
 
 //Búsqueda en el conjunto de prueba Medline
-Corpus.CorpusLoad(app.Configuration["FileLocationTestMedline"], true);
+//Corpus.CorpusLoad(app.Configuration["FileLocationTestMedline"], true);
 
 //Búsqueda en el conjunto de prueba ADI
 //Corpus.CorpusLoad(app.Configuration["FileLocationTestADI"], true);

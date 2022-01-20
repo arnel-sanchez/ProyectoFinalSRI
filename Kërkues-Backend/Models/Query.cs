@@ -107,11 +107,20 @@ namespace Kërkues_Backend.Models
                         break;
                     }
                 }
-                item1.Value.IDF = Math.Log10((double)files.Count / (double)ni);
-                item1.Value.W = (item1.Value.A + ((1-item1.Value.A)*(double)item1.Value.Frec/(double)MaximumFrequency)) * item1.Value.IDF;
-                norm += Math.Pow(item1.Value.W, 2);
+                
+                if (Vector.Count > 1 && ni == 0)
+                {
+                    Vector.Remove(item1.Key);
+                }
+                else
+                {
+                    item1.Value.IDF = Math.Log10((double)files.Count / (double)ni);
+                    item1.Value.W = (item1.Value.A + ((1-item1.Value.A)*(double)item1.Value.Frec/(double)MaximumFrequency)) * item1.Value.IDF;
+                    norm += Math.Pow(item1.Value.W, 2);
 
-                Norm += norm;
+                    Norm += norm;
+                }
+                
             }
 
         }
