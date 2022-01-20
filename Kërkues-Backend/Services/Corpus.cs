@@ -111,6 +111,10 @@ namespace Kërkues_Backend.Services
                     {
                         state++;
                     }
+				    else if (token == ".w")
+				    {
+				    	state = 4;
+				    }
                     else if(token != ".i")
                         id = int.Parse(token);
                 }
@@ -129,6 +133,10 @@ namespace Kërkues_Backend.Services
                     {
                         state++;
                     }
+				    else if (token == ".w")
+				    {
+				    	state = 4;
+				    }
                     else if (token != ".a")
                         words.Add(token);
                 }
@@ -174,7 +182,7 @@ namespace Kërkues_Backend.Services
             var data = context.Data.LoadFromEnumerable(emptyData);
 
             var tokenization = context.Transforms.Text.TokenizeIntoWords("Tokens", "Text",
-                separators: new char[] { '\n', ' ', ',', '\r' })
+                separators: new char[] { '\n', ' ', ',', '\r', ';', '?', '(', ')' })
                 .Append(context.Transforms.Text.RemoveDefaultStopWords("Tokens", "Tokens",
                 Microsoft.ML.Transforms.Text.StopWordsRemovingEstimator.Language.English));
 
