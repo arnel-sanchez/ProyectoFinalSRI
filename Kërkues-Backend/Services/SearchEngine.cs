@@ -26,7 +26,7 @@ namespace Kërkues_Backend.Services
             var res = query.Ranking();
             timer.Stop();
 
-            res.ResponseTime = (double)timer.ElapsedMilliseconds/(double)1000;
+            res.ResponseTime = (double)timer.ElapsedMilliseconds / 1000;
             return res;
         }
 
@@ -38,7 +38,7 @@ namespace Kërkues_Backend.Services
             var res = query.Ranking(test);
             timer.Stop();
 
-            res.ResponseTime = (double)timer.ElapsedMilliseconds / (double)1000;
+            res.ResponseTime = (double)timer.ElapsedMilliseconds / 1000;
             return res;
         }
     }
