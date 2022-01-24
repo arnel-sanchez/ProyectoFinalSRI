@@ -221,7 +221,7 @@ namespace Kërkues_Backend.Services
             {
                 text.Tokens[i] = stemmer.stem(text.Tokens[i].ToLower());
             }
-
+			
             /*
             var stemmer = new Annytab.Stemmer.EnglishStemmer();
             for (int i = 0; i < text.Tokens.Length; i++)

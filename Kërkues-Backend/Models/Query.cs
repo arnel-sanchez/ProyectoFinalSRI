@@ -45,7 +45,7 @@ namespace Kërkues_Backend.Models
             var data = context.Data.LoadFromEnumerable(new List<TextData>());
 
             var tokenization = context.Transforms.Text.TokenizeIntoWords("Tokens", "Text",
-                new[] { '\n', ' ', ',', '.', '-' })
+                new[] { '\n', ' ', ',', '.', '-', '\r', ';', '?', '(', ')' })
                 .Append(context.Transforms.Text.RemoveDefaultStopWords("Tokens", "Tokens"));
 
             var model = tokenization.Fit(data);
@@ -57,18 +57,20 @@ namespace Kërkues_Backend.Models
 
         private void Stemming()
         {
-            /*
+            
             Porter2 stemmer = new Porter2();
             for (int i = 0; i < Tokens.Tokens.Length; i++)
             {
                 Tokens.Tokens[i] = stemmer.stem(Tokens.Tokens[i].ToLower());
-            }*/
-
+            }
+			
+			/*
             var stemmer = new Annytab.Stemmer.EnglishStemmer();
             for (var i = 0; i < Tokens.Tokens.Length; i++)
             {
                 Tokens.Tokens[i] = stemmer.GetSteamWord(Tokens.Tokens[i].ToLower());
             }
+			*/
         }
 
         private void UpdateVector()
